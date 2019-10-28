@@ -4,4 +4,6 @@
 .text                    # space made for the text in memory
 
 Main: 
+
+blah blah blah
 	
