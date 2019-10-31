@@ -65,7 +65,11 @@ syscall
 
 j invalid #the end of the loop 
 
-invalid: #if the charactar charactar is invalid 
+invalid: #if the charactar is invalid 
+
+#move $a0, $s2
+li $v0, 1
+la $a0, $s2
 
 li $v0, 10
 
