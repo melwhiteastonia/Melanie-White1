@@ -2,14 +2,13 @@
 
 output: .asciiz "Output:" #this will print the base conversion 
 string: .space 11 #array goes here with 10 elements
-array2: .space 11 #valid inputs go here
-#list: .asciiz "012345789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStT"
+
 .text #enables text input
 
 main:
-la $s1, 0
-la $s3, 0
-la $s4, 0   #for valid charactar 
+la $s1, 0   #declaring space for result
+la $s3, 0   #declaring space for valid space
+la $s4, 0   #declaring space for valid charactar 
 
 # create the string space and gets the user input
 li $v0, 8 #gets the system ready to read the code
@@ -29,19 +28,12 @@ li $a1, 11          #loads the actual string into a1
 li $v0, 8            #read string
 
 
-#prints the charactar of a string
-
-la $t0, string
-lb $a0, 4($t0)
-li $v0, 11
-syscall
-
 loop: #loop to iterate over a string
 
 lb $a0, ($t0)	#loads the string
 add $t0, $t0, 1 #increments one to the string
-beqz $a0, end
-beq $a0, 10, end
+beqz $a0, invalid #if it's the end of the string the program will go to terminate
+beq $a0, 10, invalid #if it's longer than 10 spaces then the program will go to terminate
 beq $a0, 32, spacecharactar
 bne, $s4, 1, checkpoint   #if it is true that the charactar is valid then it will go to the (offset)
 
@@ -67,9 +59,9 @@ j invalid #the end of the loop
 
 invalid: #if the charactar is invalid 
 
-#move $a0, $s2
+move $a0, $s2
 li $v0, 1
-la $a0, $s2
+#la $a0, $s2
 
 li $v0, 10
 
