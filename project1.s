@@ -11,7 +11,7 @@ newline: .asciiz "\n"
 main:
 
 la $s1, 0   #declaring space for result
-la $s3, 0   #declaring space for valid space
+la $s3, 0   #checking if their is space after valid charactar 
 la $s4, 0   #declaring space for valid charactar 
 
 # create the string space and gets the user input
@@ -35,7 +35,7 @@ addi $t0, $t0, 1 #increments one to the string
 beqz $a0, end #if it's null the program will go to terminate
 beq $a0, 10, end #if it's longer than 10 spaces then the program will go to terminate
 beq $a0, 32, spacecharactar
-bne, $s3, 1, checkpoint  #if the charactar is a space then it will go to offset
+bne, $s3, 0, checkpoint  #if the charactar is a space then it will go to offset
 bne, $s4, 1, checkpoint  #if it is true that the charactar is valid then it will go to the offset
 
 
@@ -60,7 +60,7 @@ j invalid #the end of the loop
 
 end: 
 
-beqz, $s4, invalid
+beqz, $s4, invalid      #if the value within the register is not zero then it goes to the invalid loop
 
 j print
 
@@ -72,12 +72,12 @@ li $v0, 4
 la $a0, newline
 syscall
 
-move $a0, $s1
-li $v0, 1
+move $a0, $s1      #this is the call to move the result to the register
+li $v0, 1          #call to print an integer
 syscall 
 
-li $v0, 10
-
+li $v0, 10         #program exits here 
+ 
 syscall 
 
 #----------------------------------------------------------------------
@@ -115,7 +115,7 @@ j loop
 invalid: #if the ascii value is invalid 
 
 addi $s2, $zero, 0        #if the value is invalid then you add 0 to the temp register
-addu $s1, $s1, $s2
+addu $s1, $s1, $s2  #adds that value to the final result 
 
 j loop
 
@@ -126,8 +126,8 @@ j loop
 
 spacecharactar: #in the instance of a space
 
-beqz $s4, loop
-la $s3, 1
+beqz $s4, loop                  #
+la $s3, 1 
 
 j loop
 
