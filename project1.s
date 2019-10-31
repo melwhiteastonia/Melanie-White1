@@ -5,12 +5,15 @@ string: .space 11 #array goes here with 10 elements
 
 .text #enables text input
 
+#-----------------------------------------------------------------------------
+
 main:
 la $s1, 0   #declaring space for result
 la $s3, 0   #declaring space for valid space
 la $s4, 0   #declaring space for valid charactar 
 
 # create the string space and gets the user input
+
 li $v0, 8 #gets the system ready to read the code
 la $a0, string #address to store the variable
 li $a1, 11 #a string of 10 integers
@@ -21,21 +24,19 @@ syscall
 
 #may have a problem. try to connect the input with the string
 
-# loads the string 
 
-la $a0, string      #loads string address into register $a0
-li $a1, 11          #loads the actual string into a1
-li $v0, 8            #read string
 
+#----------------------------------------------------------------------------
 
 loop: #loop to iterate over a string
 
 lb $a0, ($t0)	#loads the string
 add $t0, $t0, 1 #increments one to the string
-beqz $a0, invalid #if it's the end of the string the program will go to terminate
-beq $a0, 10, invalid #if it's longer than 10 spaces then the program will go to terminate
+beqz $a0, end #if it's null the program will go to terminate
+beq $a0, 10, end #if it's longer than 10 spaces then the program will go to terminate
 beq $a0, 32, spacecharactar
-bne, $s4, 1, checkpoint   #if it is true that the charactar is valid then it will go to the (offset)
+bne, $s3, 1, checkpoint  #if the charactar is a space then it will go to offset
+bne, $s4, 1, checkpoint  #if it is true that the charactar is valid then it will go to the offset
 
 
 
@@ -53,19 +54,29 @@ blt $a0, 85, valid_upper     #65<n(ascii#)<84
 blt $a0, 97, invalid
 blt $a0, 117, valid_lower #97<n(ascii#)<117
 
-syscall 
-
 j invalid #the end of the loop 
 
-invalid: #if the charactar is invalid 
+#----------------------------------------------------------------------------------------------------------------------
 
-move $a0, $s2
+end: 
+
+beqz, $s4, invalid
+
+j print
+
+#---------------------------------------------------------------------------------------------------------------
+
+print: #if the charactar is invalid 
+
+move $a0, $s1
 li $v0, 1
-#la $a0, $s2
+
 
 li $v0, 10
 
 syscall 
+
+#----------------------------------------------------------------------
 
 valid_digit: #if the valid charactar is a digit
 
@@ -74,26 +85,47 @@ addu $s1, $s1, $s2 #add the real value to a register which holds the result
 
 j loop
 
+#---------------------------------------------------------------------------------
+
 valid_upper:
 
-subu $s2, $a0, 65 #subtract 65 to find the real value
+subu $s2, $a0, 55 #subtract 55 to find the real value
 addu $s1, $s1, $s2 #add the real value to the register holding the result
 
 j loop
+
+#----------------------------------------------------------------------------------------
+
 
 valid_lower: 
 
-subu $s2, $a0, 97 #subtract 97 to find the real value
+subu $s2, $a0, 87 #subtract 87 to find the real value
 addu $s1, $s1, $s2 #add the real value to the register holding the result
 
 
 j loop
 
 
-
+#-------------------------------------------------------------------------------------------
  
+invalid: #if the ascii value is invalid 
+
+addi $s2, $a0, 0
+addu $s1, $s1, $s2
+
+j loop
 
 
+#-----------------------------------------------------------------------------------------------
+
+
+
+spacecharactar: #in the instance of a space
+
+beqz $s4, loop
+la $s3, 1
+
+j loop
 
 							
 
@@ -101,27 +133,3 @@ j loop
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#prints whatever is stored in the string 
-
-
-
-
-
-syscall
-
-
-#gets the user input for the string #input
-
-
-#prompts the output
-#li $v0, 4  #code to display text
-#la $a0, output 
-#syscall
- 
-
-
-
-#  compare 1st charactar to first space in array with a first charactar in string, which means we must access the first charactar in the string and the first charactar in the array, and if they do not meet the conditions "being the same
-#we are comparing the 
-
-#lb (load byte command) 
