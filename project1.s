@@ -36,7 +36,7 @@ lb $a0, 4($t0)
 li $v0, 11
 syscall
 
-#loop to iterate over a string
+loop: #loop to iterate over a string
 
 lb $a0, ($t0)	#loads the string
 add $t0, $t0, 1 #increments one to the string
@@ -63,6 +63,35 @@ blt $a0, 117, valid_lower #97<n(ascii#)<117
 
 syscall 
 
+j invalid #the end of the loop 
+
+invalid: #if the charactar charactar is invalid 
+
+li $v0, 10
+
+syscall 
+
+valid_digit: #if the valid charactar is a digit
+
+subu $s2, $a0, 48 #subtract 48 to find the real value
+addu $s1, $s1, $s2 #add the real value to a register which holds the result
+
+j loop
+
+valid_upper:
+
+subu $s2, $a0, 65 #subtract 65 to find the real value
+addu $s1, $s1, $s2 #add the real value to the register holding the result
+
+j loop
+
+valid_lower: 
+
+subu $s2, $a0, 97 #subtract 97 to find the real value
+addu $s1, $s1, $s2 #add the real value to the register holding the result
+
+
+j loop
 
 
 
@@ -73,8 +102,6 @@ syscall
 							
 
 
-li $v0, 10 #exits the program
-syscall
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
