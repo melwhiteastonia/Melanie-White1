@@ -114,7 +114,7 @@ j loop
  
 invalid: #if the ascii value is invalid 
 
-addi $s2, $a0, 0        #if the value is invalid then you add the 
+addi $s2, $zero, 0        #if the value is invalid then you add 0 to the temp register
 addu $s1, $s1, $s2
 
 j loop
