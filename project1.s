@@ -1,6 +1,5 @@
 .data
 
-#input: .asciiz "Input:" #this will both print the text and allow the user to input
 output: .asciiz "Output:" #this will print the base conversion 
 string: .space 11 #array goes here with 10 elements
 array2: .space 11 #valid inputs go here
@@ -9,10 +8,13 @@ array2: .space 11 #valid inputs go here
 
 main:
 
+la $s4, 0   #for valid charactar 
+
 # create the string space and gets the user input
 li $v0, 8 #gets the system ready to read the code
 la $a0, string #address to store the variable
-li $a1, 11 #a string of 10 ith one extra space 
+li $a1, 11 #a string of 10 integers
+move $t0, $a0 #a pointer to the temporary space
 
 
 syscall 
@@ -33,8 +35,20 @@ lb $a0, 4($t0)
 li $v0, 11
 syscall
 
+#loop to iterate over a string
+
+lb $a0, ($t0)	#loads the string
+add $t0, $t0, 1 #increments one to the string
+beqz $a0, endofloop
+beq $a0, 10, endofloop
+beq $a0, 32, spacecharactar
+bne, $s4, 1, checkpoint   #if it is true that the charactar is valid then it will go to the (offset)
 
 
+#loop to check if the charactar is valid 
+
+
+							
 
 
 li $v0, 10 #exits the program
