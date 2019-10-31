@@ -1,13 +1,15 @@
 .data
 
 output: .asciiz "Output:" #this will print the base conversion 
-string: .space 11 #array goes here with 10 elements
+string: .space 32 #array goes here with 10 elements
+newline: .asciiz "\n"
 
 .text #enables text input
 
 #-----------------------------------------------------------------------------
 
 main:
+
 la $s1, 0   #declaring space for result
 la $s3, 0   #declaring space for valid space
 la $s4, 0   #declaring space for valid charactar 
@@ -17,21 +19,19 @@ la $s4, 0   #declaring space for valid charactar
 li $v0, 8 #gets the system ready to read the code
 la $a0, string #address to store the variable
 li $a1, 11 #a string of 10 integers
-move $t0, $a0 #a pointer to the temporary space
 
 
 syscall 
 
-#may have a problem. try to connect the input with the string
 
 
 
 #----------------------------------------------------------------------------
-
+move $t0, $a0 #a pointer to the temporary space
 loop: #loop to iterate over a string
 
 lb $a0, ($t0)	#loads the string
-add $t0, $t0, 1 #increments one to the string
+addi $t0, $t0, 1 #increments one to the string
 beqz $a0, end #if it's null the program will go to terminate
 beq $a0, 10, end #if it's longer than 10 spaces then the program will go to terminate
 beq $a0, 32, spacecharactar
@@ -39,7 +39,7 @@ bne, $s3, 1, checkpoint  #if the charactar is a space then it will go to offset
 bne, $s4, 1, checkpoint  #if it is true that the charactar is valid then it will go to the offset
 
 
-
+j invalid 
 
 checkpoint: #loop to check if the charactar is valid 
 
@@ -68,9 +68,13 @@ j print
 
 print: #if the charactar is invalid 
 
+li $v0, 4
+la $a0, newline
+syscall
+
 move $a0, $s1
 li $v0, 1
-
+syscall 
 
 li $v0, 10
 
@@ -110,7 +114,7 @@ j loop
  
 invalid: #if the ascii value is invalid 
 
-addi $s2, $a0, 0
+addi $s2, $a0, 0        #if the value is invalid then you add the 
 addu $s1, $s1, $s2
 
 j loop
