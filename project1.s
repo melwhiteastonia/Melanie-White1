@@ -7,7 +7,8 @@ array2: .space 11 #valid inputs go here
 .text #enables text input
 
 main:
-
+la $s1, 0
+la $s3, 0
 la $s4, 0   #for valid charactar 
 
 # create the string space and gets the user input
@@ -39,13 +40,34 @@ syscall
 
 lb $a0, ($t0)	#loads the string
 add $t0, $t0, 1 #increments one to the string
-beqz $a0, endofloop
-beq $a0, 10, endofloop
+beqz $a0, end
+beq $a0, 10, end
 beq $a0, 32, spacecharactar
 bne, $s4, 1, checkpoint   #if it is true that the charactar is valid then it will go to the (offset)
 
 
-#loop to check if the charactar is valid 
+
+
+checkpoint: #loop to check if the charactar is valid 
+
+la $s4, 1 #basically affirming the existence of a charactar 
+
+blt $a0, 48, invalid
+blt $a0, 58, valid_digit   #if ascii is less than 57 (valid), but if less than 48 (invalid), so 48<n<58
+
+blt $a0, 65, invalid
+blt $a0, 85, valid_upper     #65<n(ascii#)<84
+
+blt $a0, 97, invalid
+blt $a0, 117, valid_lower #97<n(ascii#)<117
+
+syscall 
+
+
+
+
+ 
+
 
 
 							
