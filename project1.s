@@ -35,7 +35,7 @@ addi $t0, $t0, 1 #increments one to the string
 beqz $a0, end #if it's null the program will go to terminate
 beq $a0, 10, end #if it's longer than 10 spaces then the program will go to terminate
 beq $a0, 32, spacecharactar
-bne, $s3, 0, checkpoint  #if the charactar is a space then it will go to offset
+bne, $s3, 1, checkpoint  #if the charactar is a space then it will go to offset
 bne, $s4, 1, checkpoint  #if it is true that the charactar is valid then it will go to the offset
 
 
@@ -126,8 +126,7 @@ j loop
 
 spacecharactar: #in the instance of a space
 
-beqz $s4, loop                  #
-la $s3, 1 
+
 
 j loop
 
